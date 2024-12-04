@@ -24,16 +24,16 @@ class Visual2 extends Component {
     }
   
     const normalizedData = data.map(d => ({
-      occupation: d.occupation ? d.occupation.trim().toLowerCase() : null,
+      credit_mix: d.credit_mix ? d.credit_mix.trim().toLowerCase() : null,
       credit_score: d.credit_score ? parseInt(d.credit_score, 10) : null,
     }));
   
   
-    const occupations = ["doctor", "teacher", "lawyer", "engineer", "other"];
+    const creditMixes = ["Good", "Standard", "Poor"];
     const creditScores = ["Poor", "Standard", "Good"];
   
-    const groupedData = occupations.map((occupation) => {
-      const filtered = normalizedData.filter(d => d.occupation === occupation.toLowerCase());
+    const groupedData = creditMixes.map((credit_mix) => {
+      const filtered = normalizedData.filter(d => d.credit_mix === credit_mix.toLowerCase());
   
       const counts = filtered.reduce((acc, curr) => {
         if (curr.credit_score !== null && curr.credit_score >= 0 && curr.credit_score < 3) {
@@ -45,7 +45,7 @@ class Visual2 extends Component {
       const total = counts.reduce((sum, count) => sum + count, 0);
   
       const percentages = {
-        occupation,
+        credit_mix,
         Poor: total ? (counts[0] / total) * 100 : 0,
         Standard: total ? (counts[1] / total) * 100 : 0,
         Good: total ? (counts[2] / total) * 100 : 0,
@@ -71,7 +71,7 @@ class Visual2 extends Component {
       .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
     const xScale = d3.scaleBand()
-                     .domain(occupations)
+                     .domain(creditMixes)
                      .range([0, width])
                      .padding(0.2);
 
@@ -93,7 +93,7 @@ class Visual2 extends Component {
       .selectAll("rect")
       .data(d => d)
       .join("rect")
-      .attr("x", d => xScale(d.data.occupation))
+      .attr("x", d => xScale(d.data.credit_mix))
       .attr("y", d => {
         return yScale(d[1]);
       })
